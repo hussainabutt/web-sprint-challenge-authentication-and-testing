@@ -1,16 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-
+const session = require('express-session');
 const authenticate = require('../auth/authenticate-middleware.js');
 const authRouter = require('../auth/auth-router.js');
 const jokesRouter = require('../jokes/jokes-router.js');
-
+const secret = require('../.env')
 const server = express();
 
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
+server.use(session({
+    name:'jokes',
+    secret:`process.env.secret`,
+}))
 
 server.use('/api/auth', authRouter);
 server.use('/api/jokes', authenticate, jokesRouter);
